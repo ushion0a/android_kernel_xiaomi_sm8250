@@ -137,7 +137,7 @@ else
     scripts/config --file out/.config -d KSU
 fi
 
-make $MAKE_ARGS -j$(nproc)
+make $MAKE_ARGS -j$(nproc) -fPIC
 
 
 if [ -f "out/arch/arm64/boot/Image" ]; then
@@ -300,7 +300,7 @@ scripts/config --file out/.config \
     -e MI_RECLAIM \
     -e RTMM \
 
-make $MAKE_ARGS -j$(nproc)
+make $MAKE_ARGS -j$(nproc) -fPIC
 
 
 
