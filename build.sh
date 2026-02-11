@@ -121,6 +121,7 @@ make $MAKE_ARGS ${TARGET_DEVICE}_defconfig
 if [ $KSU_ENABLE -eq 1 ]; then
     scripts/config --file out/.config \
     -e KSU \
+    -e THREAD_INFO_IN_TASK
 #    -e KSU_SUSFS \
 #    -e KSU_SUSFS_SUS_PATH \
 #    -e KSU_SUSFS_SUS_MOUNT \
@@ -131,7 +132,7 @@ if [ $KSU_ENABLE -eq 1 ]; then
 #    -e KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG \
 #    -e KSU_SUSFS_OPEN_REDIRECT \
 #    -e KSU_SUSFS_SUS_MAP \
-    -e THREAD_INFO_IN_TASK 
+   
 else
     scripts/config --file out/.config -d KSU
 fi
@@ -254,6 +255,7 @@ make $MAKE_ARGS ${TARGET_DEVICE}_defconfig
 if [ $KSU_ENABLE -eq 1 ]; then
     scripts/config --file out/.config \
     -e KSU \
+    -e THREAD_INFO_IN_TASK 
 #    -e KSU_SUSFS \
 #    -e KSU_SUSFS_SUS_PATH \
 #    -e KSU_SUSFS_SUS_MOUNT \
@@ -264,7 +266,7 @@ if [ $KSU_ENABLE -eq 1 ]; then
 #    -e KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG \
 #    -e KSU_SUSFS_OPEN_REDIRECT \
 #    -e KSU_SUSFS_SUS_MAP \
-    -e THREAD_INFO_IN_TASK 
+
 else
     scripts/config --file out/.config -d KSU
 fi
