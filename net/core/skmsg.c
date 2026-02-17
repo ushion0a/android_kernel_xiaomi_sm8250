@@ -490,7 +490,7 @@ struct sk_psock *sk_psock_init(struct sock *sk, int node)
 
 	psock->sk = sk;
 	psock->eval =  __SK_NONE;
-	psock->saved_destroy = prot->destroy;
+	psock->saved_destroy = sk->sk_prot->destroy;
 
 	INIT_LIST_HEAD(&psock->link);
 	spin_lock_init(&psock->link_lock);
@@ -740,8 +740,6 @@ EXPORT_SYMBOL_GPL(sk_psock_tls_strp_read);
 static void sk_psock_verdict_apply(struct sk_psock *psock,
 				   struct sk_buff *skb, int verdict)
 {
-	struct sock *sk_other;
-
 	switch (verdict) {
 	case __SK_REDIRECT:
 		sk_psock_skb_redirect(psock, skb);
@@ -749,7 +747,6 @@ static void sk_psock_verdict_apply(struct sk_psock *psock,
 	case __SK_DROP:
 		/* fall-through */
 	default:
-out_free:
 		kfree_skb(skb);
 	}
 }
