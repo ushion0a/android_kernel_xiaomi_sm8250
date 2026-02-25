@@ -35,7 +35,7 @@ This kernel stands on the shoulders of giants, combining contributions from mult
 
 ## 特性 / Features
 **中文:**  
-本内核支持 [KernelSU](https://github.com/backslashxx/KernelSU)(基于 [KernelSU](https://github.com/tiann/KernelSU), 一个 KernelSU 的 fork，支持 非GKI内核) 。请自行安装 KernelSU 的管理器。NoKernelSU 版本支持应用 Magisk 和 APatch(及他们的分支)。  
+本内核支持 [KernelSU](https://github.com/backslashxx/KernelSU)(基于 [KernelSU](https://github.com/tiann/KernelSU), 一个 KernelSU 的 fork，支持 非GKI内核) 。请自行安装 KernelSU 的管理器。NoKernelSU 版本支持应用 Magisk 和 APatch(及他们的分支)。 在AOSP版本集成了ReKernel
 
 **Release** 里的编译好的内核成品由 `android16-aptusitu` 分支编译，应当能在原版 MIUI/HyperOS 和第三方的基于 AOSP 的各种 Android11-16 的 ROM 上使用。欢迎大家尝试并反馈(提 Issue 或 Pull Requests)! 酷友们到 [这个帖子](https://www.coolapk.com/feed/67088487) 讨论或反馈，也可以加入 QQ 群，或者给我私信反馈!  
 
