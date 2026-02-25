@@ -72,7 +72,9 @@
 #include <linux/security.h>
 #include <linux/spinlock.h>
 /* REKERNEL */
+#ifdef CONFIG_KSU
 #include <../rekernel/rekernel.h>
+#endif
 /* REKERNEL */
 #include <linux/ratelimit.h>
 
@@ -3154,6 +3156,7 @@ static void binder_transaction(struct binder_proc *proc,
 		target_proc->tmp_ref++;
 		binder_inner_proc_unlock(target_thread->proc);
 /* REKERNEL */
+#ifdef CONFIG_KSU
 		if (start_rekernel_server() == 0) {
 			if (target_proc
 				&& (NULL != target_proc->tsk)
@@ -3166,6 +3169,7 @@ static void binder_transaction(struct binder_proc *proc,
          			send_netlink_message(binder_kmsg, strlen(binder_kmsg));
 			}
    		}
+#endif
 /* REKERNEL */
 
 #ifdef CONFIG_MILLET
@@ -3237,6 +3241,7 @@ static void binder_transaction(struct binder_proc *proc,
 		}
 		e->to_node = target_node->debug_id;
 /* REKERNEL */
+#ifdef CONFIG_KSU
 		if (start_rekernel_server() == 0) {
 			if (target_proc
 				&& (NULL != target_proc->tsk)
@@ -3249,6 +3254,7 @@ static void binder_transaction(struct binder_proc *proc,
 	 			send_netlink_message(binder_kmsg, strlen(binder_kmsg));
 			}
 		}
+#endif
 /* REKERNEL */
 #ifdef CONFIG_MILLET
 		if (target_proc

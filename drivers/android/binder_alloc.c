@@ -32,7 +32,9 @@
 #include <linux/uaccess.h>
 #include <linux/highmem.h>
 /* REKERNEL */
+#ifdef CONFIG_KSU
 #include <../rekernel/rekernel.h>
+#endif
 /* REKERNEL */
 #include "binder_alloc.h"
 #include "binder_trace.h"
@@ -409,7 +411,9 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
 				int pid)
 {
 /* REKERNEL */
+#ifdef CONFIG_KSU
 	struct task_struct *proc_task = NULL;
+#endif
 /* REKERNEL */
 	struct rb_node *n = alloc->free_buffers.rb_node;
 	struct binder_buffer *buffer;
@@ -446,6 +450,7 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
 
 #ifdef CONFIG_MILLET
 /* REKERNEL */
+#ifdef CONFIG_KSU
 	if (is_async
 		&& (alloc->free_async_space < 3 * (size + sizeof(struct binder_buffer))
 		|| (alloc->free_async_space < WARN_AHEAD_SPACE))) {
@@ -460,7 +465,9 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
 			}
 		}
 	}
+#endif
 /* REKERNEL */
+
 	if (is_async &&
 		(alloc->free_async_space < WARN_AHEAD_MSGS * (size + sizeof(struct binder_buffer))
 		|| alloc->free_async_space < binder_warn_ahead_space)) {
@@ -484,6 +491,7 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
 	size = max(size, sizeof(void *));
 
 /* REKERNEL */
+#ifdef CONFIG_KSU
 	if (is_async
 		&& (alloc->free_async_space < 3 * (size + sizeof(struct binder_buffer))
 		|| (alloc->free_async_space < WARN_AHEAD_SPACE))) {
@@ -498,6 +506,7 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
 			}
 		}
 	}
+#endif
 /* REKERNEL */
 	if (is_async && alloc->free_async_space < size) {
 		binder_alloc_debug(BINDER_DEBUG_BUFFER_ALLOC,
@@ -505,6 +514,7 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
 			      alloc->pid, size);
 		return ERR_PTR(-ENOSPC);
 	}
+
 
 	while (n) {
 		buffer = rb_entry(n, struct binder_buffer, rb_node);

@@ -60,7 +60,9 @@
 #include <asm/siginfo.h>
 #include <asm/cacheflush.h>
 /* REKERNEL */
+#ifdef CONFIG_KSU
 #include <../drivers/rekernel/rekernel.h>
+#endif
 /* REKERNEL */
 #include "audit.h"	/* audit_signal_info() */
 
@@ -1277,6 +1279,7 @@ int do_send_sig_info(int sig, struct siginfo *info, struct task_struct *p,
 	unsigned long flags;
 	int ret = -ESRCH;
 /* REKERNEL */
+#ifdef CONFIG_KSU
 	if (start_rekernel_server() == 0) {
 		if (line_is_frozen(current) && (sig == SIGKILL || sig == SIGTERM || sig == SIGABRT || sig == SIGQUIT)) {
 	 			char binder_kmsg[PACKET_SIZE];
@@ -1284,6 +1287,7 @@ int do_send_sig_info(int sig, struct siginfo *info, struct task_struct *p,
 	 			send_netlink_message(binder_kmsg, strlen(binder_kmsg));
 		}
 	}
+#endif
 /* REKERNEL */
 #ifdef CONFIG_MILLET
 	struct millet_data data;
