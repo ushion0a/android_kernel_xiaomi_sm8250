@@ -72,7 +72,7 @@
 #include <linux/security.h>
 #include <linux/spinlock.h>
 /* REKERNEL */
-#ifdef CONFIG_KSU
+#ifdef CONFIG_REKERNEL
 #include <../rekernel/rekernel.h>
 #endif
 /* REKERNEL */
@@ -3156,7 +3156,7 @@ static void binder_transaction(struct binder_proc *proc,
 		target_proc->tmp_ref++;
 		binder_inner_proc_unlock(target_thread->proc);
 /* REKERNEL */
-#ifdef CONFIG_KSU
+#ifdef CONFIG_REKERNEL
 		if (start_rekernel_server() == 0) {
 			if (target_proc
 				&& (NULL != target_proc->tsk)
@@ -3241,7 +3241,7 @@ static void binder_transaction(struct binder_proc *proc,
 		}
 		e->to_node = target_node->debug_id;
 /* REKERNEL */
-#ifdef CONFIG_KSU
+#ifdef CONFIG_REKERNEL
 		if (start_rekernel_server() == 0) {
 			if (target_proc
 				&& (NULL != target_proc->tsk)

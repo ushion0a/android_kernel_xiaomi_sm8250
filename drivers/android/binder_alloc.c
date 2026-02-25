@@ -32,7 +32,7 @@
 #include <linux/uaccess.h>
 #include <linux/highmem.h>
 /* REKERNEL */
-#ifdef CONFIG_KSU
+#ifdef CONFIG_REKERNEL
 #include <../rekernel/rekernel.h>
 #endif
 /* REKERNEL */
@@ -411,7 +411,7 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
 				int pid)
 {
 /* REKERNEL */
-#ifdef CONFIG_KSU
+#ifdef CONFIG_REKERNEL
 	struct task_struct *proc_task = NULL;
 #endif
 /* REKERNEL */
@@ -450,7 +450,7 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
 
 #ifdef CONFIG_MILLET
 /* REKERNEL */
-#ifdef CONFIG_KSU
+#ifdef CONFIG_REKERNEL
 	if (is_async
 		&& (alloc->free_async_space < 3 * (size + sizeof(struct binder_buffer))
 		|| (alloc->free_async_space < WARN_AHEAD_SPACE))) {
@@ -491,7 +491,7 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
 	size = max(size, sizeof(void *));
 
 /* REKERNEL */
-#ifdef CONFIG_KSU
+#ifdef CONFIG_REKERNEL
 	if (is_async
 		&& (alloc->free_async_space < 3 * (size + sizeof(struct binder_buffer))
 		|| (alloc->free_async_space < WARN_AHEAD_SPACE))) {

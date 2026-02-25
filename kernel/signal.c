@@ -60,7 +60,7 @@
 #include <asm/siginfo.h>
 #include <asm/cacheflush.h>
 /* REKERNEL */
-#ifdef CONFIG_KSU
+#ifdef CONFIG_REKERNEL
 #include <../drivers/rekernel/rekernel.h>
 #endif
 /* REKERNEL */
@@ -1279,7 +1279,7 @@ int do_send_sig_info(int sig, struct siginfo *info, struct task_struct *p,
 	unsigned long flags;
 	int ret = -ESRCH;
 /* REKERNEL */
-#ifdef CONFIG_KSU
+#ifdef CONFIG_REKERNEL
 	if (start_rekernel_server() == 0) {
 		if (line_is_frozen(current) && (sig == SIGKILL || sig == SIGTERM || sig == SIGABRT || sig == SIGQUIT)) {
 	 			char binder_kmsg[PACKET_SIZE];

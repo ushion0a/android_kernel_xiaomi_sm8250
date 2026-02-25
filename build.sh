@@ -121,7 +121,8 @@ make $MAKE_ARGS ${TARGET_DEVICE}_defconfig
 if [ $KSU_ENABLE -eq 1 ]; then
     scripts/config --file out/.config \
     -e KSU \
-    -e THREAD_INFO_IN_TASK 
+    -e THREAD_INFO_IN_TASK \
+    -w REKERNEL
 #    -e KSU_SUSFS \
 #    -e KSU_SUSFS_SUS_PATH \
 #    -e KSU_SUSFS_SUS_MOUNT \
