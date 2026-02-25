@@ -85,7 +85,7 @@ clang --version
 KSU_ZIP_STR=NoKernelSU
 if [ "$2" == "ksu" ]; then
     KSU_ENABLE=1
-    KSU_ZIP_STR=SukiSU-SUSFS
+    KSU_ZIP_STR=KernelSU
 else
     KSU_ENABLE=0
 fi
