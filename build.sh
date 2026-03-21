@@ -186,157 +186,157 @@ echo "Build for AOSP finished."
 # ------------- Building for MIUI -------------
 
 
-echo "Clearning [out/] and build for MIUI....."
-rm -rf out/
+# echo "Clearning [out/] and build for MIUI....."
+# rm -rf out/
 
-dts_source=arch/arm64/boot/dts/vendor/qcom
+# dts_source=arch/arm64/boot/dts/vendor/qcom
 
-# Backup dts
-cp -a ${dts_source} .dts.bak
+# # Backup dts
+# cp -a ${dts_source} .dts.bak
 
-# Correct panel dimensions on MIUI builds
-sed -i 's/<154>/<1537>/g' ${dts_source}/dsi-panel-j1s*
-sed -i 's/<154>/<1537>/g' ${dts_source}/dsi-panel-j2*
-sed -i 's/<155>/<1544>/g' ${dts_source}/dsi-panel-j3s-37-02-0a-dsc-video.dtsi
-sed -i 's/<155>/<1545>/g' ${dts_source}/dsi-panel-j11-38-08-0a-fhd-cmd.dtsi
-sed -i 's/<155>/<1546>/g' ${dts_source}/dsi-panel-k11a-38-08-0a-dsc-cmd.dtsi
-sed -i 's/<155>/<1546>/g' ${dts_source}/dsi-panel-l11r-38-08-0a-dsc-cmd.dtsi
-sed -i 's/<70>/<695>/g' ${dts_source}/dsi-panel-j11-38-08-0a-fhd-cmd.dtsi
-sed -i 's/<70>/<695>/g' ${dts_source}/dsi-panel-j3s-37-02-0a-dsc-video.dtsi
-sed -i 's/<70>/<695>/g' ${dts_source}/dsi-panel-k11a-38-08-0a-dsc-cmd.dtsi
-sed -i 's/<70>/<695>/g' ${dts_source}/dsi-panel-l11r-38-08-0a-dsc-cmd.dtsi
-sed -i 's/<71>/<710>/g' ${dts_source}/dsi-panel-j1s*
-sed -i 's/<71>/<710>/g' ${dts_source}/dsi-panel-j2*
+# # Correct panel dimensions on MIUI builds
+# sed -i 's/<154>/<1537>/g' ${dts_source}/dsi-panel-j1s*
+# sed -i 's/<154>/<1537>/g' ${dts_source}/dsi-panel-j2*
+# sed -i 's/<155>/<1544>/g' ${dts_source}/dsi-panel-j3s-37-02-0a-dsc-video.dtsi
+# sed -i 's/<155>/<1545>/g' ${dts_source}/dsi-panel-j11-38-08-0a-fhd-cmd.dtsi
+# sed -i 's/<155>/<1546>/g' ${dts_source}/dsi-panel-k11a-38-08-0a-dsc-cmd.dtsi
+# sed -i 's/<155>/<1546>/g' ${dts_source}/dsi-panel-l11r-38-08-0a-dsc-cmd.dtsi
+# sed -i 's/<70>/<695>/g' ${dts_source}/dsi-panel-j11-38-08-0a-fhd-cmd.dtsi
+# sed -i 's/<70>/<695>/g' ${dts_source}/dsi-panel-j3s-37-02-0a-dsc-video.dtsi
+# sed -i 's/<70>/<695>/g' ${dts_source}/dsi-panel-k11a-38-08-0a-dsc-cmd.dtsi
+# sed -i 's/<70>/<695>/g' ${dts_source}/dsi-panel-l11r-38-08-0a-dsc-cmd.dtsi
+# sed -i 's/<71>/<710>/g' ${dts_source}/dsi-panel-j1s*
+# sed -i 's/<71>/<710>/g' ${dts_source}/dsi-panel-j2*
 
-# Enable back mi smartfps while disabling qsync min refresh-rate
-sed -i 's/\/\/ mi,mdss-dsi-pan-enable-smart-fps/mi,mdss-dsi-pan-enable-smart-fps/g' ${dts_source}/dsi-panel*
-sed -i 's/\/\/ mi,mdss-dsi-smart-fps-max_framerate/mi,mdss-dsi-smart-fps-max_framerate/g' ${dts_source}/dsi-panel*
-sed -i 's/\/\/ qcom,mdss-dsi-pan-enable-smart-fps/qcom,mdss-dsi-pan-enable-smart-fps/g' ${dts_source}/dsi-panel*
-sed -i 's/qcom,mdss-dsi-qsync-min-refresh-rate/\/\/qcom,mdss-dsi-qsync-min-refresh-rate/g' ${dts_source}/dsi-panel*
+# # Enable back mi smartfps while disabling qsync min refresh-rate
+# sed -i 's/\/\/ mi,mdss-dsi-pan-enable-smart-fps/mi,mdss-dsi-pan-enable-smart-fps/g' ${dts_source}/dsi-panel*
+# sed -i 's/\/\/ mi,mdss-dsi-smart-fps-max_framerate/mi,mdss-dsi-smart-fps-max_framerate/g' ${dts_source}/dsi-panel*
+# sed -i 's/\/\/ qcom,mdss-dsi-pan-enable-smart-fps/qcom,mdss-dsi-pan-enable-smart-fps/g' ${dts_source}/dsi-panel*
+# sed -i 's/qcom,mdss-dsi-qsync-min-refresh-rate/\/\/qcom,mdss-dsi-qsync-min-refresh-rate/g' ${dts_source}/dsi-panel*
 
-# Enable back refresh rates supported on MIUI
-sed -i 's/120 90 60/120 90 60 50 30/g' ${dts_source}/dsi-panel-g7a-36-02-0c-dsc-video.dtsi
-sed -i 's/120 90 60/120 90 60 50 30/g' ${dts_source}/dsi-panel-g7a-37-02-0a-dsc-video.dtsi
-sed -i 's/120 90 60/120 90 60 50 30/g' ${dts_source}/dsi-panel-g7a-37-02-0b-dsc-video.dtsi
-sed -i 's/144 120 90 60/144 120 90 60 50 48 30/g' ${dts_source}/dsi-panel-j3s-37-02-0a-dsc-video.dtsi
-
-
-# Enable back brightness control from dtsi
-sed -i 's/\/\/39 00 00 00 00 00 03 51 03 FF/39 00 00 00 00 00 03 51 03 FF/g' ${dts_source}/dsi-panel-j9-38-0a-0a-fhd-video.dtsi
-sed -i 's/\/\/39 00 00 00 00 00 03 51 0D FF/39 00 00 00 00 00 03 51 0D FF/g' ${dts_source}/dsi-panel-j2-p2-1-38-0c-0a-dsc-cmd.dtsi
-sed -i 's/\/\/39 00 00 00 00 00 05 51 0F 8F 00 00/39 00 00 00 00 00 05 51 0F 8F 00 00/g' ${dts_source}/dsi-panel-j1s-42-02-0a-dsc-cmd.dtsi
-sed -i 's/\/\/39 00 00 00 00 00 05 51 0F 8F 00 00/39 00 00 00 00 00 05 51 0F 8F 00 00/g' ${dts_source}/dsi-panel-j1s-42-02-0a-mp-dsc-cmd.dtsi
-sed -i 's/\/\/39 00 00 00 00 00 05 51 0F 8F 00 00/39 00 00 00 00 00 05 51 0F 8F 00 00/g' ${dts_source}/dsi-panel-j2-mp-42-02-0b-dsc-cmd.dtsi
-sed -i 's/\/\/39 00 00 00 00 00 05 51 0F 8F 00 00/39 00 00 00 00 00 05 51 0F 8F 00 00/g' ${dts_source}/dsi-panel-j2-p2-1-42-02-0b-dsc-cmd.dtsi
-sed -i 's/\/\/39 00 00 00 00 00 05 51 0F 8F 00 00/39 00 00 00 00 00 05 51 0F 8F 00 00/g' ${dts_source}/dsi-panel-j2s-mp-42-02-0a-dsc-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 03 51 00 00/39 01 00 00 00 00 03 51 00 00/g' ${dts_source}/dsi-panel-j2-38-0c-0a-dsc-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 03 51 00 00/39 01 00 00 00 00 03 51 00 00/g' ${dts_source}/dsi-panel-j2-38-0c-0a-dsc-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 03 51 03 FF/39 01 00 00 00 00 03 51 03 FF/g' ${dts_source}/dsi-panel-j11-38-08-0a-fhd-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 03 51 03 FF/39 01 00 00 00 00 03 51 03 FF/g' ${dts_source}/dsi-panel-j9-38-0a-0a-fhd-video.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 03 51 07 FF/39 01 00 00 00 00 03 51 07 FF/g' ${dts_source}/dsi-panel-j1u-42-02-0b-dsc-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 03 51 07 FF/39 01 00 00 00 00 03 51 07 FF/g' ${dts_source}/dsi-panel-j2-42-02-0b-dsc-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 03 51 07 FF/39 01 00 00 00 00 03 51 07 FF/g' ${dts_source}/dsi-panel-j2-p1-42-02-0b-dsc-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 03 51 0F FF/39 01 00 00 00 00 03 51 0F FF/g' ${dts_source}/dsi-panel-j1u-42-02-0b-dsc-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 03 51 0F FF/39 01 00 00 00 00 03 51 0F FF/g' ${dts_source}/dsi-panel-j2-42-02-0b-dsc-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 03 51 0F FF/39 01 00 00 00 00 03 51 0F FF/g' ${dts_source}/dsi-panel-j2-p1-42-02-0b-dsc-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 05 51 07 FF 00 00/39 01 00 00 00 00 05 51 07 FF 00 00/g' ${dts_source}/dsi-panel-j1s-42-02-0a-dsc-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 05 51 07 FF 00 00/39 01 00 00 00 00 05 51 07 FF 00 00/g' ${dts_source}/dsi-panel-j1s-42-02-0a-mp-dsc-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 05 51 07 FF 00 00/39 01 00 00 00 00 05 51 07 FF 00 00/g' ${dts_source}/dsi-panel-j2-mp-42-02-0b-dsc-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 05 51 07 FF 00 00/39 01 00 00 00 00 05 51 07 FF 00 00/g' ${dts_source}/dsi-panel-j2-p2-1-42-02-0b-dsc-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 00 00 05 51 07 FF 00 00/39 01 00 00 00 00 05 51 07 FF 00 00/g' ${dts_source}/dsi-panel-j2s-mp-42-02-0a-dsc-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 01 00 03 51 03 FF/39 01 00 00 01 00 03 51 03 FF/g' ${dts_source}/dsi-panel-j11-38-08-0a-fhd-cmd.dtsi
-sed -i 's/\/\/39 01 00 00 11 00 03 51 03 FF/39 01 00 00 11 00 03 51 03 FF/g' ${dts_source}/dsi-panel-j2-p2-1-38-0c-0a-dsc-cmd.dtsi
+# # Enable back refresh rates supported on MIUI
+# sed -i 's/120 90 60/120 90 60 50 30/g' ${dts_source}/dsi-panel-g7a-36-02-0c-dsc-video.dtsi
+# sed -i 's/120 90 60/120 90 60 50 30/g' ${dts_source}/dsi-panel-g7a-37-02-0a-dsc-video.dtsi
+# sed -i 's/120 90 60/120 90 60 50 30/g' ${dts_source}/dsi-panel-g7a-37-02-0b-dsc-video.dtsi
+# sed -i 's/144 120 90 60/144 120 90 60 50 48 30/g' ${dts_source}/dsi-panel-j3s-37-02-0a-dsc-video.dtsi
 
 
-make $MAKE_ARGS ${TARGET_DEVICE}_defconfig
-
-if [ $KSU_ENABLE -eq 1 ]; then
-    scripts/config --file out/.config \
-    -e KSU \
-    -e THREAD_INFO_IN_TASK \
-    -e KSU_SUSFS \
-    -e KSU_SUSFS_SUS_PATH \
-    -e KSU_SUSFS_SUS_MOUNT \
-    -e KSU_SUSFS_SUS_KSTAT \
-    -e KSU_SUSFS_SPOOF_UNAME \
-    -e KSU_SUSFS_ENABLE_LOG \
-    -e KSU_SUSFS_HIDE_KSU_SUSFS_SYMBOLS \
-    -e KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG \
-    -e KSU_SUSFS_OPEN_REDIRECT \
-    -e KSU_SUSFS_SUS_MAP \
-    -e KSU_MULTI_MANAGER_SUPPORT \
-    -e KPM
-else
-    scripts/config --file out/.config -d KSU
-fi
-
-
-scripts/config --file out/.config \
-    --set-str STATIC_USERMODEHELPER_PATH /system/bin/micd \
-    -e PERF_CRITICAL_RT_TASK	\
-    -e SF_BINDER		\
-    -e OVERLAY_FS		\
-    -d DEBUG_FS \
-    -e MIGT \
-    -e MIGT_ENERGY_MODEL \
-    -e MIHW \
-    -e PACKAGE_RUNTIME_INFO \
-    -e BINDER_OPT \
-    -e KPERFEVENTS \
-    -e MILLET \
-    -e PERF_HUMANTASK \
-    -d LTO_CLANG \
-    -e SF_BINDER \
-    -e XIAOMI_MIUI \
-    -d MI_MEMORY_SYSFS \
-    -e TASK_DELAY_ACCT \
-    -e MIUI_ZRAM_MEMORY_TRACKING \
-    -d CONFIG_MODULE_SIG_SHA512 \
-    -d CONFIG_MODULE_SIG_HASH \
-    -e MI_FRAGMENTION \
-    -e PERF_HELPER \
-    -e BOOTUP_RECLAIM \
-    -e MI_RECLAIM \
-    -e RTMM \
-
-make $MAKE_ARGS -j$(nproc)
+# # Enable back brightness control from dtsi
+# sed -i 's/\/\/39 00 00 00 00 00 03 51 03 FF/39 00 00 00 00 00 03 51 03 FF/g' ${dts_source}/dsi-panel-j9-38-0a-0a-fhd-video.dtsi
+# sed -i 's/\/\/39 00 00 00 00 00 03 51 0D FF/39 00 00 00 00 00 03 51 0D FF/g' ${dts_source}/dsi-panel-j2-p2-1-38-0c-0a-dsc-cmd.dtsi
+# sed -i 's/\/\/39 00 00 00 00 00 05 51 0F 8F 00 00/39 00 00 00 00 00 05 51 0F 8F 00 00/g' ${dts_source}/dsi-panel-j1s-42-02-0a-dsc-cmd.dtsi
+# sed -i 's/\/\/39 00 00 00 00 00 05 51 0F 8F 00 00/39 00 00 00 00 00 05 51 0F 8F 00 00/g' ${dts_source}/dsi-panel-j1s-42-02-0a-mp-dsc-cmd.dtsi
+# sed -i 's/\/\/39 00 00 00 00 00 05 51 0F 8F 00 00/39 00 00 00 00 00 05 51 0F 8F 00 00/g' ${dts_source}/dsi-panel-j2-mp-42-02-0b-dsc-cmd.dtsi
+# sed -i 's/\/\/39 00 00 00 00 00 05 51 0F 8F 00 00/39 00 00 00 00 00 05 51 0F 8F 00 00/g' ${dts_source}/dsi-panel-j2-p2-1-42-02-0b-dsc-cmd.dtsi
+# sed -i 's/\/\/39 00 00 00 00 00 05 51 0F 8F 00 00/39 00 00 00 00 00 05 51 0F 8F 00 00/g' ${dts_source}/dsi-panel-j2s-mp-42-02-0a-dsc-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 03 51 00 00/39 01 00 00 00 00 03 51 00 00/g' ${dts_source}/dsi-panel-j2-38-0c-0a-dsc-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 03 51 00 00/39 01 00 00 00 00 03 51 00 00/g' ${dts_source}/dsi-panel-j2-38-0c-0a-dsc-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 03 51 03 FF/39 01 00 00 00 00 03 51 03 FF/g' ${dts_source}/dsi-panel-j11-38-08-0a-fhd-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 03 51 03 FF/39 01 00 00 00 00 03 51 03 FF/g' ${dts_source}/dsi-panel-j9-38-0a-0a-fhd-video.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 03 51 07 FF/39 01 00 00 00 00 03 51 07 FF/g' ${dts_source}/dsi-panel-j1u-42-02-0b-dsc-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 03 51 07 FF/39 01 00 00 00 00 03 51 07 FF/g' ${dts_source}/dsi-panel-j2-42-02-0b-dsc-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 03 51 07 FF/39 01 00 00 00 00 03 51 07 FF/g' ${dts_source}/dsi-panel-j2-p1-42-02-0b-dsc-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 03 51 0F FF/39 01 00 00 00 00 03 51 0F FF/g' ${dts_source}/dsi-panel-j1u-42-02-0b-dsc-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 03 51 0F FF/39 01 00 00 00 00 03 51 0F FF/g' ${dts_source}/dsi-panel-j2-42-02-0b-dsc-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 03 51 0F FF/39 01 00 00 00 00 03 51 0F FF/g' ${dts_source}/dsi-panel-j2-p1-42-02-0b-dsc-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 05 51 07 FF 00 00/39 01 00 00 00 00 05 51 07 FF 00 00/g' ${dts_source}/dsi-panel-j1s-42-02-0a-dsc-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 05 51 07 FF 00 00/39 01 00 00 00 00 05 51 07 FF 00 00/g' ${dts_source}/dsi-panel-j1s-42-02-0a-mp-dsc-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 05 51 07 FF 00 00/39 01 00 00 00 00 05 51 07 FF 00 00/g' ${dts_source}/dsi-panel-j2-mp-42-02-0b-dsc-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 05 51 07 FF 00 00/39 01 00 00 00 00 05 51 07 FF 00 00/g' ${dts_source}/dsi-panel-j2-p2-1-42-02-0b-dsc-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 00 00 05 51 07 FF 00 00/39 01 00 00 00 00 05 51 07 FF 00 00/g' ${dts_source}/dsi-panel-j2s-mp-42-02-0a-dsc-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 01 00 03 51 03 FF/39 01 00 00 01 00 03 51 03 FF/g' ${dts_source}/dsi-panel-j11-38-08-0a-fhd-cmd.dtsi
+# sed -i 's/\/\/39 01 00 00 11 00 03 51 03 FF/39 01 00 00 11 00 03 51 03 FF/g' ${dts_source}/dsi-panel-j2-p2-1-38-0c-0a-dsc-cmd.dtsi
 
 
+# make $MAKE_ARGS ${TARGET_DEVICE}_defconfig
 
-if [ -f "out/arch/arm64/boot/Image" ]; then
-    echo "The file [out/arch/arm64/boot/Image] exists. MIUI Build successfully."
-else
-    echo "The file [out/arch/arm64/boot/Image] does not exist. Seems MIUI build failed."
-    exit 1
-fi
-
-echo "Generating [out/arch/arm64/boot/dtb]......"
-find out/arch/arm64/boot/dts -name '*.dtb' -exec cat {} + >out/arch/arm64/boot/dtb
-
-
-# Restore modified dts
-rm -rf ${dts_source}
-mv .dts.bak ${dts_source}
-
-rm -rf anykernel/kernels/
-mkdir -p anykernel/kernels/miui/
-
-# Patch for SukiSU KPM support. 
 # if [ $KSU_ENABLE -eq 1 ]; then
-#     cd out/arch/arm64/boot/
-#     wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.13.0/patch_linux
-#     chmod +x patch_linux
-#     ./patch_linux
-#     rm Image
-#     mv oImage Image
-#     cd -
+#     scripts/config --file out/.config \
+#     -e KSU \
+#     -e THREAD_INFO_IN_TASK \
+#     -e KSU_SUSFS \
+#     -e KSU_SUSFS_SUS_PATH \
+#     -e KSU_SUSFS_SUS_MOUNT \
+#     -e KSU_SUSFS_SUS_KSTAT \
+#     -e KSU_SUSFS_SPOOF_UNAME \
+#     -e KSU_SUSFS_ENABLE_LOG \
+#     -e KSU_SUSFS_HIDE_KSU_SUSFS_SYMBOLS \
+#     -e KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG \
+#     -e KSU_SUSFS_OPEN_REDIRECT \
+#     -e KSU_SUSFS_SUS_MAP \
+#     -e KSU_MULTI_MANAGER_SUPPORT \
+#     -e KPM
+# else
+#     scripts/config --file out/.config -d KSU
 # fi
 
-cp out/arch/arm64/boot/Image anykernel/kernels/miui/
-cp out/arch/arm64/boot/dtb anykernel/kernels/miui/
-cp out/arch/arm64/boot/dtbo.img anykernel/kernels/miui/
 
-echo "Build for MIUI finished."
+# scripts/config --file out/.config \
+#     --set-str STATIC_USERMODEHELPER_PATH /system/bin/micd \
+#     -e PERF_CRITICAL_RT_TASK	\
+#     -e SF_BINDER		\
+#     -e OVERLAY_FS		\
+#     -d DEBUG_FS \
+#     -e MIGT \
+#     -e MIGT_ENERGY_MODEL \
+#     -e MIHW \
+#     -e PACKAGE_RUNTIME_INFO \
+#     -e BINDER_OPT \
+#     -e KPERFEVENTS \
+#     -e MILLET \
+#     -e PERF_HUMANTASK \
+#     -d LTO_CLANG \
+#     -e SF_BINDER \
+#     -e XIAOMI_MIUI \
+#     -d MI_MEMORY_SYSFS \
+#     -e TASK_DELAY_ACCT \
+#     -e MIUI_ZRAM_MEMORY_TRACKING \
+#     -d CONFIG_MODULE_SIG_SHA512 \
+#     -d CONFIG_MODULE_SIG_HASH \
+#     -e MI_FRAGMENTION \
+#     -e PERF_HELPER \
+#     -e BOOTUP_RECLAIM \
+#     -e MI_RECLAIM \
+#     -e RTMM \
+
+# make $MAKE_ARGS -j$(nproc)
+
+
+
+# if [ -f "out/arch/arm64/boot/Image" ]; then
+#     echo "The file [out/arch/arm64/boot/Image] exists. MIUI Build successfully."
+# else
+#     echo "The file [out/arch/arm64/boot/Image] does not exist. Seems MIUI build failed."
+#     exit 1
+# fi
+
+# echo "Generating [out/arch/arm64/boot/dtb]......"
+# find out/arch/arm64/boot/dts -name '*.dtb' -exec cat {} + >out/arch/arm64/boot/dtb
+
+
+# # Restore modified dts
+# rm -rf ${dts_source}
+# mv .dts.bak ${dts_source}
+
+# rm -rf anykernel/kernels/
+# mkdir -p anykernel/kernels/miui/
+
+# # Patch for SukiSU KPM support. 
+# # if [ $KSU_ENABLE -eq 1 ]; then
+# #     cd out/arch/arm64/boot/
+# #     wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.13.0/patch_linux
+# #     chmod +x patch_linux
+# #     ./patch_linux
+# #     rm Image
+# #     mv oImage Image
+# #     cd -
+# # fi
+
+# cp out/arch/arm64/boot/Image anykernel/kernels/miui/
+# cp out/arch/arm64/boot/dtb anykernel/kernels/miui/
+# cp out/arch/arm64/boot/dtbo.img anykernel/kernels/miui/
+
+# echo "Build for MIUI finished."
 
 # ------------- End of Building for MIUI -------------
 #  If you don't need MIUI you can comment out the above block [Building for MIUI]
