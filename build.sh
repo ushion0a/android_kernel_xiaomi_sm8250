@@ -24,8 +24,6 @@ fi
 
 
 
-
-
 echo "TOOLCHAIN_PATH: [$TOOLCHAIN_PATH]"
 export PATH="$TOOLCHAIN_PATH:$PATH"
 
@@ -154,15 +152,15 @@ rm -rf anykernel/kernels/
 mkdir -p anykernel/kernels/aosp/
 
 # Patch for SukiSU KPM support. 
-# # if [ $KSU_ENABLE -eq 1 ]; then
-# #     cd out/arch/arm64/boot/
-# #     wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.13.0/patch_linux
-# #     chmod +x patch_linux
-# #     ./patch_linux
-# #     rm Image
-# #     mv oImage Image
-# #     cd -
-# # fi
+# if [ $KSU_ENABLE -eq 1 ]; then
+#     cd out/arch/arm64/boot/
+#     wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.13.0/patch_linux
+#     chmod +x patch_linux
+#     ./patch_linux
+#     rm Image
+#     mv oImage Image
+#     cd -
+# fi
 
 cp out/arch/arm64/boot/Image anykernel/kernels/aosp/
 cp out/arch/arm64/boot/dtb anykernel/kernels/aosp/
