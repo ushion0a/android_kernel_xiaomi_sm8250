@@ -22,11 +22,7 @@ fi
 
 
 
-if [ ! -d $TOOLCHAIN_PATH ]; then
-    echo "TOOLCHAIN_PATH [$TOOLCHAIN_PATH] does not exist."
-    echo "Please ensure the toolchain is there, or change TOOLCHAIN_PATH in the script to your toolchain path."
-    exit 1
-fi
+
 
 echo "TOOLCHAIN_PATH: [$TOOLCHAIN_PATH]"
 export PATH="$TOOLCHAIN_PATH:$PATH"
@@ -95,14 +91,14 @@ echo "TARGET_DEVICE: $TARGET_DEVICE"
 
 if [ $KSU_ENABLE -eq 1 ]; then
     echo "KSU is enabled"
-    curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh" | bash
+    curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/master/kernel/setup.sh" | bash
 else
     echo "KSU is disabled"
 fi
 
-# echo "Integrating Baseband-guard..."
-# curl -LSs "https://github.com/vc-teahouse/Baseband-guard/raw/main/setup.sh" | bash
-# sed -i '/^config LSM$/,/^help$/{ /^[[:space:]]*default/ { /baseband_guard/! s/selinux/selinux,baseband_guard/ } }' security/Kconfig
+echo "Integrating Baseband-guard..."
+curl -LSs "https://github.com/vc-teahouse/Baseband-guard/raw/main/setup.sh" | bash
+sed -i '/^config LSM$/,/^help$/{ /^[[:space:]]*default/ { /baseband_guard/! s/selinux/selinux,baseband_guard/ } }' security/Kconfig
 
 
 echo "Cleaning..."
@@ -156,15 +152,15 @@ rm -rf anykernel/kernels/
 mkdir -p anykernel/kernels/aosp/
 
 # Patch for SukiSU KPM support. 
-if [ $KSU_ENABLE -eq 1 ]; then
-    cd out/arch/arm64/boot/
-    wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.13.0/patch_linux
-    chmod +x patch_linux
-    ./patch_linux
-    rm Image
-    mv oImage Image
-    cd -
-fi
+# if [ $KSU_ENABLE -eq 1 ]; then
+#     cd out/arch/arm64/boot/
+#     wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.13.0/patch_linux
+#     chmod +x patch_linux
+#     ./patch_linux
+#     rm Image
+#     mv oImage Image
+#     cd -
+# fi
 
 cp out/arch/arm64/boot/Image anykernel/kernels/aosp/
 cp out/arch/arm64/boot/dtb anykernel/kernels/aosp/
@@ -326,15 +322,15 @@ rm -rf anykernel/kernels/
 mkdir -p anykernel/kernels/miui/
 
 # Patch for SukiSU KPM support. 
-if [ $KSU_ENABLE -eq 1 ]; then
-    cd out/arch/arm64/boot/
-    wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.13.0/patch_linux
-    chmod +x patch_linux
-    ./patch_linux
-    rm Image
-    mv oImage Image
-    cd -
-fi
+# if [ $KSU_ENABLE -eq 1 ]; then
+#     cd out/arch/arm64/boot/
+#     wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.13.0/patch_linux
+#     chmod +x patch_linux
+#     ./patch_linux
+#     rm Image
+#     mv oImage Image
+#     cd -
+# fi
 
 cp out/arch/arm64/boot/Image anykernel/kernels/miui/
 cp out/arch/arm64/boot/dtb anykernel/kernels/miui/
