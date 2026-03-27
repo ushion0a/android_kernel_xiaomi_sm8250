@@ -116,8 +116,7 @@ make $MAKE_ARGS ${TARGET_DEVICE}_defconfig
 
 if [ $KSU_ENABLE -eq 1 ]; then
     scripts/config --file out/.config \
-    -e KSU \
-    -e KSU_EXTRAS
+    -e KSU 
 else
     scripts/config --file out/.config -d KSU
 fi
