@@ -95,7 +95,7 @@
 #include <linux/flex_array.h>
 #include <linux/posix-timers.h>
 #include <linux/cpufreq_times.h>
-#if defined(CONFIG_KSU_SUSFS_SUS_MAP) || defined(CONFIG_KSU_SUSFS_OPEN_REDIRECT)
+#if defined(CONFIG_KSU_SUSFS_SUS_MAP) && defined(CONFIG_KSU_SUSFS_OPEN_REDIRECT)
 #include <linux/susfs_def.h>
 #endif
 #include <trace/events/oom.h>
@@ -913,7 +913,9 @@ static ssize_t mem_rw(struct file *file, char __user *buf,
 				} else {
 					copied = -EIO;
 				}
-				break;
+				*ppos = addr;
+				mmput(mm);
+				goto free;
 			}
 		}
 #endif
@@ -1980,7 +1982,8 @@ static int do_proc_readlink(struct path *path, char __user *buffer, int buflen)
 			len = strlen(tmp);
 			if (copy_to_user(buffer, tmp, len))
 				len = -EFAULT;
-			goto out;
+			kfree(tmp);
+			return len;
 		}
 	}
 #endif

@@ -408,7 +408,6 @@ show_map_vma(struct seq_file *m, struct vm_area_struct *vma)
 		susfs_sus_kstat_spoof_show_map_vma(inode, &dev, &ino);
 #endif // #ifdef CONFIG_KSU_SUSFS_SUS_KSTAT
 	}
-
 #ifdef CONFIG_KSU_SUSFS_OPEN_REDIRECT
 orig_flow:
 #endif // #ifdef CONFIG_KSU_SUSFS_OPEN_REDIRECT
@@ -909,20 +908,30 @@ static int show_smap(struct seq_file *m, void *v)
 	if (vma->vm_file) {
 		struct inode *inode = file_inode(vma->vm_file);
 		if (SUSFS_IS_INODE_SUS_MAP(inode)) {
+			smap_gather_stats(vma, &mss);
+
 			show_map_vma(m, vma);
+			if (vma_get_anon_name(vma)) {
+				seq_puts(m, "Name:           ");
+				seq_print_vma_name(m, vma);
+			}
+
 			SEQ_PUT_DEC("Size:           ", vma->vm_end - vma->vm_start);
 			SEQ_PUT_DEC(" kB\nKernelPageSize: ", vma_kernel_pagesize(vma));
 			SEQ_PUT_DEC(" kB\nMMUPageSize:    ", vma_mmu_pagesize(vma));
 			seq_puts(m, " kB\n");
+
 			__show_smap(m, &mss);
+
+			seq_printf(m, "THPeligible:    %d\n", transparent_hugepage_enabled(vma));
+
 			if (arch_pkeys_enabled())
-					seq_printf(m, "ProtectionKey:  %8u\n", vma_pkey(vma));
-			seq_puts(m, "VmFlags: mr mw me");
-			seq_putc(m, '\n');
+				seq_printf(m, "ProtectionKey:  %8u\n", vma_pkey(vma));
+
 			goto bypass_orig_flow;
 		}
 	}
-#endif // #ifdef CONFIG_KSU_SUSFS_SUS_MAP
+#endif
 
 	smap_gather_stats(vma, &mss);
 
@@ -944,11 +953,13 @@ static int show_smap(struct seq_file *m, void *v)
 
 	if (arch_pkeys_enabled())
 		seq_printf(m, "ProtectionKey:  %8u\n", vma_pkey(vma));
-	show_smap_vma_flags(m, vma);
 
 #ifdef CONFIG_KSU_SUSFS_SUS_MAP
 bypass_orig_flow:
 #endif
+
+	show_smap_vma_flags(m, vma);
+
 	m_cache_vma(m, vma);
 
 	return 0;
@@ -1710,6 +1721,7 @@ static ssize_t pagemap_read(struct file *file, char __user *buf,
 		if (ret)
 			goto out_free;
 		ret = walk_page_range(start_vaddr, end, &pagemap_walk);
+		mmap_read_unlock(mm);
 #ifdef CONFIG_KSU_SUSFS_SUS_MAP
 		vma = find_vma(mm, start_vaddr);
 		if (vma && vma->vm_file) {
@@ -1719,7 +1731,6 @@ static ssize_t pagemap_read(struct file *file, char __user *buf,
 			}
 		}
 #endif
-		mmap_read_unlock(mm);
 		start_vaddr = end;
 
 		len = min(count, PM_ENTRY_BYTES * pm.pos);
