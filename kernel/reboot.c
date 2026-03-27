@@ -326,14 +326,10 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, unsigned int, cmd,
 	struct pid_namespace *pid_ns = task_active_pid_ns(current);
 	char buffer[256];
 	int ret = 0;
-#ifdef CONFIG_KSU_SUSFS
-    ret = ksu_handle_sys_reboot(magic1, magic2, cmd, &arg);
-    if (ret) {
-        goto orig_flow;
-    }
-    return ret;
-orig_flow:
+#ifdef CONFIG_KSU 
+	ksu_handle_sys_reboot(magic1, magic2, cmd, &arg);
 #endif
+
 
 	if (check_poweroff_charger_mode()){
 		pr_warn("poweroff charging skip this detect\n");
