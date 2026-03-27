@@ -253,6 +253,13 @@ static int filldir(struct dir_context *ctx, const char *name, int namlen,
 		buf->error = -EOVERFLOW;
 		return -EOVERFLOW;
 	}
+	dirent = buf->previous;
+	if (dirent) {
+		if (signal_pending(current))
+			return -EINTR;
+		if (__put_user(offset, &dirent->d_off))
+			goto efault;
+	}
 #ifdef CONFIG_KSU_SUSFS_SUS_PATH
 	inode = ilookup(buf->sb, ino);
 	if (!inode) {
@@ -265,13 +272,6 @@ static int filldir(struct dir_context *ctx, const char *name, int namlen,
 	iput(inode);
 orig_flow:
 #endif
-	dirent = buf->previous;
-	if (dirent) {
-		if (signal_pending(current))
-			return -EINTR;
-		if (__put_user(offset, &dirent->d_off))
-			goto efault;
-	}
 	dirent = buf->current_dir;
 	if (__put_user(d_ino, &dirent->d_ino))
 		goto efault;
@@ -362,6 +362,9 @@ static int filldir64(struct dir_context *ctx, const char *name, int namlen,
 	if (dirent) {
 		if (signal_pending(current))
 			return -EINTR;
+		if (__put_user(offset, &dirent->d_off))
+			goto efault;
+	}
 #ifdef CONFIG_KSU_SUSFS_SUS_PATH
 	inode = ilookup(buf->sb, ino);
 	if (!inode) {
@@ -374,9 +377,6 @@ static int filldir64(struct dir_context *ctx, const char *name, int namlen,
 	iput(inode);
 orig_flow:
 #endif
-		if (__put_user(offset, &dirent->d_off))
-			goto efault;
-	}
 	dirent = buf->current_dir;
 	if (__put_user(ino, &dirent->d_ino))
 		goto efault;
@@ -475,7 +475,6 @@ static int compat_fillonedir(struct dir_context *ctx, const char *name,
 
 	if (buf->result)
 		return -EINVAL;
-
 	buf->result = verify_dirent_name(name, namlen);
 	if (buf->result < 0)
 		return buf->result;
@@ -526,6 +525,7 @@ COMPAT_SYSCALL_DEFINE3(old_readdir, unsigned int, fd,
 
 	if (!f.file)
 		return -EBADF;
+
 #ifdef CONFIG_KSU_SUSFS_SUS_PATH
 	buf.sb = f.file->f_inode->i_sb;
 #endif
@@ -581,6 +581,9 @@ static int compat_filldir(struct dir_context *ctx, const char *name, int namlen,
 	if (dirent) {
 		if (signal_pending(current))
 			return -EINTR;
+		if (__put_user(offset, &dirent->d_off))
+			goto efault;
+	}
 #ifdef CONFIG_KSU_SUSFS_SUS_PATH
 	inode = ilookup(buf->sb, ino);
 	if (!inode) {
@@ -593,9 +596,6 @@ static int compat_filldir(struct dir_context *ctx, const char *name, int namlen,
 	iput(inode);
 orig_flow:
 #endif
-		if (__put_user(offset, &dirent->d_off))
-			goto efault;
-	}
 	dirent = buf->current_dir;
 	if (__put_user(d_ino, &dirent->d_ino))
 		goto efault;
@@ -635,6 +635,7 @@ COMPAT_SYSCALL_DEFINE3(getdents, unsigned int, fd,
 	f = fdget_pos(fd);
 	if (!f.file)
 		return -EBADF;
+
 #ifdef CONFIG_KSU_SUSFS_SUS_PATH
 	buf.sb = f.file->f_inode->i_sb;
 #endif

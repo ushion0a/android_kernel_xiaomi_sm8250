@@ -121,10 +121,23 @@ static inline void susfs_set_current_proc_umounted(void) {
 static inline bool susfs_is_current_proc_umounted_app(void) {
 	return (test_ti_thread_flag(&current->thread_info, TIF_PROC_UMOUNTED) &&
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0)
-	__kuid_val(current_uid()) >= 10000);
+			__kuid_val(current_uid()) >= 10000);
 #else
-	current_uid().val >= 10000);
+			current_uid().val >= 10000);
 #endif
 }
 
+#define SUSFS_IS_INODE_SUS_MAP(inode) \
+		inode && inode->i_mapping && \
+		unlikely(test_bit(AS_FLAGS_SUS_MAP, &inode->i_mapping->flags)) && \
+		susfs_is_current_proc_umounted_app()
+
+#define SUSFS_IS_INODE_OPEN_REDIRECT_WITHOUT_UID_CHECK(inode) \
+		inode && inode->i_mapping && \
+		unlikely(test_bit(AS_FLAGS_OPEN_REDIRECT, &inode->i_mapping->flags))
+
+#define SUSFS_IS_INODE_OPEN_REDIRECT(inode) \
+		inode && inode->i_mapping && \
+		unlikely(test_bit(AS_FLAGS_OPEN_REDIRECT, &inode->i_mapping->flags)) && \
+		susfs_is_current_proc_umounted_app()
 #endif // #ifndef KSU_SUSFS_DEF_H

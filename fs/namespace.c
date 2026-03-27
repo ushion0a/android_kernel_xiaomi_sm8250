@@ -36,7 +36,7 @@
 
 #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
 extern bool susfs_is_current_ksu_domain(void);
-extern bool susfs_is_sdcard_android_data_decrypted;
+extern bool susfs_is_sdcard_android_data_decrypted __read_mostly;
 
 #define CL_COPY_MNT_NS BIT(25) /* used by copy_mnt_ns() */
 
@@ -244,17 +244,16 @@ static struct mount *susfs_alloc_unshare_ksu_vfsmnt(const char *name, int old_mn
 				goto out_free_cache;
 		}
 
-		#ifdef CONFIG_SMP
+#ifdef CONFIG_SMP
 		mnt->mnt_pcp = alloc_percpu(struct mnt_pcp);
 		if (!mnt->mnt_pcp)
 			goto out_free_devname;
 
 		this_cpu_add(mnt->mnt_pcp->mnt_count, 1);
-		#else
+#else
 		mnt->mnt_count = 1;
 		mnt->mnt_writers = 0;
-		#endif
-		mnt->mnt.data = NULL;
+#endif
 
 		INIT_HLIST_NODE(&mnt->mnt_hash);
 		INIT_LIST_HEAD(&mnt->mnt_child);
@@ -300,17 +299,16 @@ static struct mount *susfs_alloc_non_unshare_ksu_vfsmnt(const char *name)
 				goto  out_free_id;
 		}
 
-		#ifdef CONFIG_SMP
+#ifdef CONFIG_SMP
 		mnt->mnt_pcp = alloc_percpu(struct mnt_pcp);
 		if (!mnt->mnt_pcp)
 			goto out_free_devname;
 
 		this_cpu_add(mnt->mnt_pcp->mnt_count, 1);
-		#else
+#else
 		mnt->mnt_count = 1;
 		mnt->mnt_writers = 0;
-		#endif
-		mnt->mnt.data = NULL;
+#endif
 
 		INIT_HLIST_NODE(&mnt->mnt_hash);
 		INIT_LIST_HEAD(&mnt->mnt_child);
@@ -345,7 +343,6 @@ static struct mount *alloc_vfsmnt(const char *name)
 		int err;
 
 		err = mnt_alloc_id(mnt);
-
 		if (err)
 			goto out_free_cache;
 
@@ -1111,18 +1108,14 @@ struct vfsmount *vfs_create_mount(struct fs_context *fc)
 	sb = fc->root->d_sb;
 
 #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
-	// We won't check it anymore if boot-completed stage is triggered.
-	if (susfs_is_sdcard_android_data_decrypted) {
-		goto orig_flow;
-	}
 	// - We will just stop checking for ksu process if /sdcard/Android is accessible,
 	//   for the sake of performance
 	if (!READ_ONCE(susfs_is_sdcard_android_data_decrypted) && susfs_is_current_ksu_domain()) {
 		mnt = susfs_alloc_non_unshare_ksu_vfsmnt(fc->source ?: "none");
 		goto bypass_orig_flow;
 	}
-orig_flow:
 #endif // #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
+
  	mnt = alloc_vfsmnt(fc->source ?: "none");
 #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
 bypass_orig_flow:
@@ -1252,7 +1245,7 @@ skip_checking_for_ksu_proc:
 		goto bypass_orig_flow;
 	}
 #endif // #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
- 	mnt = alloc_vfsmnt(old->mnt_devname);
+	mnt = alloc_vfsmnt(old->mnt_devname);
 #ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
 bypass_orig_flow:
 #endif
@@ -1314,7 +1307,6 @@ bypass_orig_flow:
 	mnt->mnt.mnt_root = dget(root);
 	mnt->mnt_mountpoint = mnt->mnt.mnt_root;
 	mnt->mnt_parent = mnt;
-
 	lock_mount_hash();
 	list_add_tail(&mnt->mnt_instance, &sb->s_mounts);
 	unlock_mount_hash();
@@ -2048,7 +2040,7 @@ struct mount *copy_tree(struct mount *mnt, struct dentry *dentry,
 					int flag)
 {
 	struct mount *res, *p, *q, *r, *parent;
-	
+
 	if (!(flag & CL_COPY_UNBINDABLE) && IS_MNT_UNBINDABLE(mnt))
 		return ERR_PTR(-EINVAL);
 
@@ -2064,7 +2056,6 @@ struct mount *copy_tree(struct mount *mnt, struct dentry *dentry,
 	p = mnt;
 	list_for_each_entry(r, &mnt->mnt_mounts, mnt_child) {
 		struct mount *s;
-
 		if (!is_subdir(r->mnt_mountpoint, dentry))
 			continue;
 
@@ -2094,7 +2085,6 @@ struct mount *copy_tree(struct mount *mnt, struct dentry *dentry,
 			q = clone_mnt(p, p->mnt.mnt_root, flag);
 			if (IS_ERR(q))
 				goto out;
-
 			lock_mount_hash();
 			list_add_tail(&q->mnt_list, &res->mnt_list);
 			attach_mnt(q, parent, p->mnt_mp);
@@ -3352,7 +3342,6 @@ struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,
 	 */
 	p = old;
 	q = new;
-
 	while (p) {
 		q->mnt_ns = new_ns;
 		new_ns->mounts++;
@@ -3373,7 +3362,6 @@ struct mnt_namespace *copy_mnt_ns(unsigned long flags, struct mnt_namespace *ns,
 		while (p->mnt.mnt_root != q->mnt.mnt_root)
 			p = next_mnt(p, old);
 	}
-
 	namespace_unlock();
 
 	if (rootmnt)
